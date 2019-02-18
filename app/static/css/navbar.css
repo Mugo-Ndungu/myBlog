@@ -1,0 +1,36 @@
+body {
+    background: url("../img/abstract-art-black-background-1040499.jpg")no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.form-box {
+    background-color: #FFF;
+    margin-left: 200px;
+    margin-top: 50px;
+    width: 400px;
+}
+
+#reg {
+    margin-left: 265px;
+}
+
+.head {
+    margin: 10px 0px;
+    color: #fff;
+    font-size: 34px;
+    font-weight: normal;
+    padding: 30px 0;
+    text-align: center;
+    text-transform: uppercase;
+    background: #6498fe;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
