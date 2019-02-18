@@ -14,7 +14,11 @@ def index():
     '''
     View root page function that returns the index page and its data
     '''
-    # post = Post.query.filter_by().first()
+    # posttitle = Post.query.filter_by(title).first()
+    # postdesc = Post.query.filter_by(description).first()
+    # postcategory = Post.query.filter_by(category).first()
+    # quote = request.get_json['author','quote']
+    # author=author,quote=quote,<-------Return to render_template
     title = 'Home'
     businesspost= Post.query.filter_by(category="businesspost")
     interviewpost = Post.query.filter_by(category="interviewpost")
@@ -23,8 +27,9 @@ def index():
 
     # upvotes = Upvote.get_all_upvotes(post_id=Post.id)
 
+    # quote = request.json['author','quote']
     return render_template('index.html', title=title, pickuppost=pickuppost,
-                           interviewpost=interviewpost, businesspost=businesspost, techpost=techpost, blog = Post.query.all() )
+                           interviewpost=interviewpost, businesspost=businesspost, techpost=techpost, )
 
 
 
