@@ -1,0 +1,30 @@
+{% extends 'bootstrap/base.html' %}
+{% import 'macros.html' as macro %}
+{% block navbar %}
+{% include 'navbar.html'%}
+{% endblock %}
+{% block styles%}
+{{ super() }}
+<link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}">
+{% endblock %}
+<!-- Content block -->
+
+
+<!-- Content block -->
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <h2>Blog Posts</h2>
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-6">
+
+        </div>
+        <div class="col-md-3">
+        </div>
+    </div>
+</div>
+
+
+{% endblock%}

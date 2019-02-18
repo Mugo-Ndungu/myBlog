@@ -1,0 +1,55 @@
+{% include 'navbar.html'%}
+
+{% import 'bootstrap/wtf.html' as wtf %}
+{% extends 'bootstrap/base.html' %}
+{% import 'macros.html' as macro %}
+{% block styles%}
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+
+    <div class="row">
+        <h2>Comments</h2>
+
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h4><a>{{post.title}}</a></h4>
+                    </div>
+                    <div class="panel-body">
+                        <h5 class="card-text text-center">{{post.description}}.</h5>
+                    </div>
+
+                </div>
+
+
+            </div>
+            <div class="row">
+                <div class="jumbotron">
+                    {{wtf.quick_form(form)}}
+                </div>
+            </div>
+            <div class="row">
+                {{ macro.displayComment(comment) }}
+
+            </div>
+
+
+        </div>
+        <div class="col-md-3">
+        </div>
+
+
+    </div>
+
+
+</div>
+
+{% endblock %}
