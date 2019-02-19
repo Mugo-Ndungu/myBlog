@@ -6,6 +6,8 @@ from .forms import PostForm, CommentForm, UpvoteForm, UpdateProfile
 from flask.views import View, MethodView
 from .. import db, photos
 import markdown2
+import requests
+import json
 
 
 # Views
@@ -14,23 +16,18 @@ def index():
     '''
     View root page function that returns the index page and its data
     '''
-    # posttitle = Post.query.filter_by(title).first()
-    # postdesc = Post.query.filter_by(description).first()
-    # postcategory = Post.query.filter_by(category).first()
-    # quote = request.get_json['author','quote']
-    # author=author,quote=quote,<-------Return to render_template
+    randomQuote = requests.get(
+        'http://quotes.stormconsultancy.co.uk/random.json').json()
     title = 'Home'
-    businesspost= Post.query.filter_by(category="businesspost")
-    interviewpost = Post.query.filter_by(category="interviewpost")
-    techpost = Post.query.filter_by(category="techpost")
-    pickuppost = Post.query.filter_by(category="pickuppost")
 
-    # upvotes = Upvote.get_all_upvotes(post_id=Post.id)
+    return render_template('index.html', title=title, randomQuote=randomQuote, index=index)
 
-    # quote = request.json['author','quote']
-    return render_template('index.html', title=title, pickuppost=pickuppost,
-                           interviewpost=interviewpost, businesspost=businesspost, techpost=techpost, )
 
+@main.route('/blogposts',methods=['GET', 'POST'])
+def blogposts():
+    index = Post.query.all()
+    print(index)
+    return render_template('blogposts.html', index=index)
 
 
 @main.route('/pickup', methods=['GET', 'POST'])
@@ -39,12 +36,14 @@ def pickup():
     pickuppost = Post.query.filter_by(category="pickuppost")
     return render_template('pickup.html', post=post, pickuppost=pickuppost)
 
+
 @main.route('/business', methods=['GET', 'POST'])
 def business():
     post = Post.query.filter_by().first()
-    businesspost= Post.query.filter_by(category="businesspost")
+    businesspost = Post.query.filter_by(category="businesspost")
 
     return render_template('business.html', businesspost=businesspost, post=post)
+
 
 @main.route('/interview', methods=['GET', 'POST'])
 def interview():
@@ -53,11 +52,13 @@ def interview():
 
     return render_template('interview.html', post=post, interviewpost=interviewpost)
 
+
 @main.route('/technology', methods=['GET', 'POST'])
 def technology():
     techpost = Post.query.filter_by(category="techpost")
     post = Post.query.filter_by().first()
     return render_template('technology.html', post=post, techpost=techpost)
+
 
 @main.route('/posts', methods=['GET', 'POST'])
 @login_required
@@ -71,7 +72,7 @@ def new_post():
         category = form.category.data
         print(current_user._get_current_object().id)
         new_post = Post(owner_id=current_user._get_current_object().id, title=title, description=description,
-                          category=category)
+                        category=category)
         db.session.add(new_post)
         db.session.commit()
 
@@ -87,7 +88,8 @@ def new_comment(post_id):
     if form.validate_on_submit():
         description = form.description.data
 
-        new_comment = Comment(description=description, user_id=current_user._get_current_object().id, post_id=post_id)
+        new_comment = Comment(
+            description=description, user_id=current_user._get_current_object().id, post_id=post_id)
         db.session.add(new_comment)
         db.session.commit()
 
@@ -104,7 +106,7 @@ def upvote(post_id):
     user = current_user
     post_upvotes = Upvote.query.filter_by(post_id=post_id)
 
-    if Upvote.query.filter(Upvote.user_id == user.id, Upvote.post_id == post_id,post=post).first():
+    if Upvote.query.filter(Upvote.user_id == user.id, Upvote.post_id == post_id, post=post).first():
         return redirect(url_for('main.index'))
 
     new_upvote = Upvote(post_id=post_id, user=current_user)
@@ -127,20 +129,20 @@ def downvote(post_id):
     return redirect(url_for('main.index'))
 
 
-
 @main.route('/profile/<uname>')
 def profile(uname):
-    user = User.query.filter_by(username = uname).first()
+    user = User.query.filter_by(username=uname).first()
 
     if user is None:
         abort(404)
 
-    return render_template("profile/profile.html", user = user)
+    return render_template("profile/profile.html", user=user)
 
-@main.route('/user/<uname>/update',methods = ['GET','POST'])
+
+@main.route('/user/<uname>/update', methods=['GET', 'POST'])
 @login_required
 def update_profile(uname):
-    user = User.query.filter_by(username = uname).first()
+    user = User.query.filter_by(username=uname).first()
     if user is None:
         abort(404)
 
@@ -152,17 +154,18 @@ def update_profile(uname):
         db.session.add(user)
         db.session.commit()
 
-        return redirect(url_for('.profile',uname=user.username))
+        return redirect(url_for('.profile', uname=user.username))
 
-    return render_template('profile/update.html',form =form)
+    return render_template('profile/update.html', form=form)
 
-@main.route('/user/<uname>/update/pic',methods= ['POST'])
+
+@main.route('/user/<uname>/update/pic', methods=['POST'])
 @login_required
 def update_pic(uname):
-    user = User.query.filter_by(username = uname).first()
+    user = User.query.filter_by(username=uname).first()
     if 'photo' in request.files:
         filename = photos.save(request.files['photo'])
         path = f'photos/{filename}'
         user.profile_pic_path = path
         db.session.commit()
-    return redirect(url_for('main.profile',uname=uname))
+    return redirect(url_for('main.profile', uname=uname))
