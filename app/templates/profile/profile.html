@@ -11,7 +11,7 @@
 
 {% block content %}
 <div class="container">
-  <h2>Profile Info</h2>
+  <h2 class="text-center">Profile Info</h2>
   <div class="row">
     <!-- displaying  Username-->
     <div class="col-md-2">
@@ -19,10 +19,13 @@
     </div>
 
     <!--Display profile photo-->
-    <div class="col-md-8">
-
-      <h3> {{user.username| capitalize}} </h3>
-
+    <div class="col-md-8 card">
+      {% if user.profile_pic_path %}
+      <img src="{{url_for('static',filename=user.profile_pic_path)}}" alt="" class="img-thumbnail">
+      {%else%}
+      <p>No profile picture</p>
+      {% endif %}
+      <h1> {{user.username| capitalize}} </h1>
       <!--Displaying user bio-->
       {% if user.bio %}
       <p> {{user.bio}}</p>
@@ -32,25 +35,12 @@
       {% if user == current_user %}
       <a href="{{url_for('main.update_profile',uname=user.username)}}">Edit profile</a>
       {% endif %}
-
-      {% if user.profile_pic_path %}
-
-      <img src="{{url_for('static',filename=user.profile_pic_path)}}" alt="" class="img-thumbnail">
-
-      {%else%}
-      <p>No profile picture</p>
-
-      {% endif %}
-
       {% if user == current_user %}
       <form action="{{url_for('main.update_pic',uname=user.username)}}" method="post" enctype="multipart/form-data">
-
         <input type="file" name="photo" class="form-control" required>
         <input type="submit">
       </form>
       {% endif %}
-      {{ macro.display(pickuppost)}}
-
     </div>
 
 
