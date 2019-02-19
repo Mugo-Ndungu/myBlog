@@ -44,7 +44,7 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     owner_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     description = db.Column(db.String(), index=True)
-    title = db.Column(db.String())
+    title = db.Column(db.String(255))
     category = db.Column(db.String(255), nullable=False)
     comments = db.relationship('Comment', backref='post', lazy='dynamic')
     upvotes = db.relationship('Upvote', backref='post', lazy='dynamic')
