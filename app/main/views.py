@@ -6,7 +6,6 @@ from .forms import PostForm, CommentForm, UpvoteForm, UpdateProfile
 from flask.views import View, MethodView
 from .. import db, photos
 import markdown2
-import requests
 import json
 
 
